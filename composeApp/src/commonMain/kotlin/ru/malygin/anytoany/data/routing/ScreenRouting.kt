@@ -19,6 +19,7 @@ import ru.malygin.anytoany.data.adapters.AuthorizationRequestState
 import ru.malygin.anytoany.data.dateTime.getTodayDate
 import ru.malygin.anytoany.data.view_models.LocalNetworkAnalyseModel
 import ru.malygin.anytoany.data.view_models.LoginModel
+import ru.malygin.anytoany.data.view_models.NeedToLoginState
 import ru.malygin.anytoany.ui.screens.MainScreen
 import ru.malygin.anytoany.ui.screens.dplWrk2LocalNetworkAnalise
 import ru.malygin.anytoany.ui.screens.dplWrkScreen
@@ -49,6 +50,12 @@ class LoginScreen: ScreenRouting{
     override fun Content() {
         val screenModel = rememberScreenModel { LoginModel() }
         val navigator = LocalNavigator.currentOrThrow
+
+        if (screenModel.needToLogin.collectAsState().value is NeedToLoginState.NeedToLogin)
+            when((screenModel.needToLogin.collectAsState().value as NeedToLoginState.NeedToLogin).reason){
+                true -> Unit
+                false -> navigator.replace(HomeScreen())
+            }
 
         when(screenModel.loginState.collectAsState().value){
             is AuthorizationRequestState.Success -> {

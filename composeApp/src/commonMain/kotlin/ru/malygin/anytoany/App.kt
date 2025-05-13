@@ -1,6 +1,7 @@
 package ru.malygin.anytoany
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
@@ -13,8 +14,6 @@ import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import ru.malygin.anytoany.data.constants.__Fake__database_DAO
-import ru.malygin.anytoany.data.routing.HomeScreen
 import ru.malygin.anytoany.data.routing.LoginScreen
 import ru.malygin.anytoany.data.routing.getScreenRoute
 import ru.malygin.anytoany.ui.cmp.modalDrawerContent
@@ -25,12 +24,9 @@ import ru.malygin.anytoany.ui.cmp.modalDrawerContent
 fun App() {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutine = rememberCoroutineScope()
-
+    
     MaterialTheme {
         Navigator(
-            if (__Fake__database_DAO.getStorageToken() != null)
-                HomeScreen()
-            else
                 LoginScreen()
         ){navigator ->
             ModalNavigationDrawer(
@@ -45,7 +41,7 @@ fun App() {
             ){
                 Scaffold(
                     topBar = {
-                        if (__Fake__database_DAO.getStorageToken() != null)
+                        if (navigator.lastItem !is LoginScreen)
                             TopAppBar(
                                 expandedHeight = 52.dp,
                                 colors = TopAppBarDefaults.topAppBarColors(

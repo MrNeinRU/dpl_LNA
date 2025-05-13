@@ -13,13 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import anytoany.composeapp.generated.resources.*
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import coil3.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ovh.plrapps.mapcompose.api.addLayer
 import ovh.plrapps.mapcompose.api.addMarker
@@ -181,10 +184,11 @@ private fun doVisualRealConnections(
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun testMarkerIcon(type:String, vd: VisualData){
 
-    val iconIn =
+    val iconIn:Painter =
         ImgReader.getPainterForMapMarker(vd.facilityDeviceHeader.dv_info)
 
     Column(

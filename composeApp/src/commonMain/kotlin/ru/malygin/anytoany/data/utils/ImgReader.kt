@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import anytoany.composeapp.generated.resources.*
+import coil3.compose.rememberAsyncImagePainter
 import kotlinx.io.Buffer
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.decodeToImageBitmap
@@ -53,13 +54,12 @@ object ImgReader {
         return when(getPlatform().osType){
             OsType.ANDROID -> {
                 when(fd){
-//                    is FacilityDevice.Machine -> painterResource(Res.drawable.map_marker_machine)
-//                    is FacilityDevice.PC -> painterResource(Res.drawable.map_marker_pc)
-//                    is FacilityDevice.Router -> painterResource(Res.drawable.map_marker_router)
-//                    is FacilityDevice.Server -> painterResource(Res.drawable.map_marker_server)
-//                    is FacilityDevice.Switch -> painterResource(Res.drawable.map_marker_swith)
-//                    is FacilityDevice.UnknownDevice -> painterResource(Res.drawable.map_marker_device_unknown)
-                    else -> painterResource(Res.drawable.df_wr)
+                    is FacilityDevice.Machine -> rememberAsyncImagePainter(Res.getUri("drawable/map_marker_machine.svg"))
+                    is FacilityDevice.PC -> rememberAsyncImagePainter(Res.getUri("drawable/map_marker_pc.svg"))
+                    is FacilityDevice.Router -> rememberAsyncImagePainter(Res.getUri("drawable/map_marker_router.svg"))
+                    is FacilityDevice.Server -> rememberAsyncImagePainter(Res.getUri("drawable/map_marker_server.svg"))
+                    is FacilityDevice.Switch -> rememberAsyncImagePainter(Res.getUri("drawable/map_marker_swith.svg"))
+                    is FacilityDevice.UnknownDevice -> rememberAsyncImagePainter(Res.getUri("drawable/map_marker_device_unknown.svg"))
                 }
             }
             else -> {

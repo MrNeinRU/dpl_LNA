@@ -4,11 +4,13 @@
 package ru.malygin.anytoany.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -16,9 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.registry.screenModule
 import ru.malygin.anytoany.data.dtos.FacilityDevice
 import ru.malygin.anytoany.data.dtos.FacilityDeviceHeader
+import ru.malygin.anytoany.data.dtos.IpUtils.toPorts
 import ru.malygin.anytoany.data.dtos.NetworkClustDto
 import ru.malygin.anytoany.data.utils.FacilityUtils
 import ru.malygin.anytoany.data.view_models.LocalNetworkAnalyseModel
@@ -129,9 +133,20 @@ private class OnSuccessUiComponents(
         Column(
             modifier = stdModifier
         ) {
-            uiUiText(
-                text = currentDevice.dv_info.getUiName()
-            )
+            Row(
+                verticalAlignment = Alignment.Bottom
+            ) {
+                uiUiText(
+                    modifier = Modifier
+                        .padding(end = 8.dp),
+                    text = currentDevice.dv_info.getUiName()
+                )
+                Text(
+                    color = Color.Gray,
+                    fontSize = 12.sp,
+                    text = if(currentDevice.isActive) "активно" else "не активно"
+                )
+            }
             uiUiText(
                 text = currentDevice.dv_id.toString()
             )
@@ -219,8 +234,29 @@ private class OnSuccessUiComponents(
         Column(
             modifier = stdModifier
         ){
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp, bottom = 8.dp),
+                textAlign = TextAlign.Center,
+                text = "Разрешенные порты"
+            )
             allowedPorts.forEach { item->
-                Text(text = item.toString())
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    uiUiText(
+                        modifier = Modifier,
+                        text = item.ip
+                    )
+                    uiUiText(
+                        modifier = Modifier,
+                        text = item.allowedPorts.toPorts()
+                    )
+                }
+                HorizontalDivider()
             }
         }
     }

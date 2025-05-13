@@ -14,10 +14,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.launch
 import ru.malygin.anytoany.data.adapters.AuthorizationRequestState
 import ru.malygin.anytoany.data.adapters.NetworkingAdapter
+import ru.malygin.anytoany.data.routing.HomeScreen
 import ru.malygin.anytoany.data.view_models.LoginModel
+import ru.malygin.anytoany.data.view_models.NeedToLoginState
 
 class LoginMainScreen(
     val screenModel: LoginModel
@@ -30,15 +34,32 @@ class LoginMainScreen(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ){
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Spacer(modifier = Modifier.fillMaxHeight(.1f))
-                loginTitle()
-                loginMainBox()
+            val needToLog = screenModel.needToLogin.collectAsState()
+            println("needToLog = $needToLog")
+
+            when (needToLog.value) {
+                is NeedToLoginState.NeedToLogin -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Spacer(modifier = Modifier.fillMaxHeight(.1f))
+                        loginTitle()
+                        loginMainBox()
+                    }
+                }
+                NeedToLoginState.Loading -> {
+//                    val nav = LocalNavigator.currentOrThrow
+                    loginLoading()
+//                    nav.replace(HomeScreen())
+                }
             }
         }
+    }
+
+    @Composable
+    private fun loginLoading(){
+        CircularProgressIndicator()
     }
 
     @Composable

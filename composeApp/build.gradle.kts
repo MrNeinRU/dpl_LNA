@@ -11,7 +11,12 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
 }
-
+configurations {
+    create("cleanedAnnotations")
+    implementation {
+        exclude(group = "org.jetbrains", module = "annotations")
+    }
+}
 kotlin {
     androidTarget {
         compilerOptions {
@@ -56,6 +61,8 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.img.coil3)
+            implementation(libs.img.coil3.svg)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
@@ -71,6 +78,11 @@ kotlin {
 
             implementation(libs.kotlin.graphs)
             implementation(libs.mapcompose.mp)
+
+            implementation(libs.room.runtime)
+//            implementation(libs.room.gradle.plugin)
+            implementation(libs.room.compiler)
+            implementation(libs.room.sqlite)
 
         }
         desktopMain.dependencies {
@@ -114,8 +126,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_18
+        targetCompatibility = JavaVersion.VERSION_18
     }
 }
 

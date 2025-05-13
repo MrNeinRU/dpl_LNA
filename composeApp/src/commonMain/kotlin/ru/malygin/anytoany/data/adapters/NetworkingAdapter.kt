@@ -2,6 +2,7 @@
 package ru.malygin.anytoany.data.adapters
 
 import kotlinx.coroutines.delay
+import ru.malygin.anytoany.data.constants.Settings
 import ru.malygin.anytoany.data.constants.__Fake__UserInfo
 import ru.malygin.anytoany.data.constants.__Fake__database_cns
 import ru.malygin.anytoany.data.data_cls.UserInformation
@@ -63,6 +64,15 @@ class NetworkingAdapter {
                 )
             }
         }
+    }
+
+    //false => token не валиден
+    suspend fun checkRemoteToken(
+        token: String
+    ): Boolean{
+        delay(1000)
+
+        return Settings.TOKEN_VALID
     }
 }
 

@@ -25,6 +25,8 @@ icepdf-v = "7.2.3"
 voyager-v = "1.1.0-beta03"
 #pcap4j-v = "1.8.2"
 #jnetpcap-wrapper-v = "2.3.1"
+room_v = "2.7.1"
+sqlite_v = "2.5.1"
 
 
 [libraries]
@@ -46,6 +48,7 @@ pdf-dev-zt64-compose-pdf = { group = "dev.zt64", name = "compose-pdf", version.r
 img-zoomable = { group = "me.saket.telephoto", name = "zoomable", version.ref = "zoomable-v" }#https://saket.github.io/telephoto/zoomable/
 pdf-icepdf = { group = "com.github.pcorless.icepdf", name = "icepdf-core", version.ref = "icepdf-v" }#https://github.com/pcorless/icepdf
 img-coil3 = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-v" }#https://github.com/coil-kt/coil
+img-coil3-svg = { group = "io.coil-kt.coil3", name = "coil-svg", version.ref = "coil-v" }#https://github.com/coil-kt/coil
 # -- не работает -- androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation-compose-v" }#https://mvnrepository.com/artifact/org.jetbrains.androidx.navigation/navigation-compose
 voyager-navigator = { group = "cafe.adriel.voyager", name = "voyager-navigator", version.ref = "voyager-v" }#https://voyager.adriel.cafe/setup/
 voyager-screenmodel = { group = "cafe.adriel.voyager", name = "voyager-screenmodel", version.ref = "voyager-v" }#https://voyager.adriel.cafe/setup/
@@ -54,6 +57,11 @@ voyager-tab-navigator = { group = "cafe.adriel.voyager", name = "voyager-tab-nav
 #net-jnetpcap-wrapper = { group = "com.slytechs.jnet.jnetpcap", name = "jnetpcap-wrapper", version.ref = "jnetpcap-wrapper-v" }
 kotlin-graphs = { group = "io.github.alexandrepiveteau", name = "kotlin-graphs", version = "0.6.1" }
 mapcompose-mp = { group = "ovh.plrapps", name = "mapcompose-mp", version = "0.10.0" }
+
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room_v" }
+room-gradle-plugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room_v" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room_v" }
+room-sqlite = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqlite_v" }
 
 #---
 

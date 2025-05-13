@@ -13,9 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
@@ -28,7 +30,6 @@ import ru.malygin.anytoany.ui.cmp.trustedBlock
 import ru.malygin.anytoany.ui.screens.tab_navigation.HomeTab
 import ru.malygin.anytoany.ui.screens.tab_navigation.MoreInfoTab
 import ru.malygin.anytoany.ui.screens.tab_navigation.VisualPreviewNewTab
-import ru.malygin.anytoany.ui.screens.tab_navigation.VisualPreviewTab
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -204,10 +205,7 @@ private object Card{
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 trustedBlock(fD.isTrusted)
-
-
                 Button(
                     onClick = {
                         onMoreInfoClicked(fD.dv_id)
@@ -227,6 +225,7 @@ private object Card{
         fD: FacilityDeviceHeader
     ){
         val name: String
+        val active: Boolean = fD.isActive
         val uuid: Uuid
         val mac: String
         val ips: String
@@ -271,6 +270,7 @@ private object Card{
         }
         cardUiUnited(
             name = name,
+            isActive = active,
             uuid = uuid,
             mac = mac,
             ips = ips
@@ -281,11 +281,26 @@ private object Card{
     @Composable
     private fun cardUiUnited(
         name:String,
+        isActive: Boolean,
         uuid:Uuid,
         mac: String,
         ips:String,
     ){
-        Text(text = name)
+        Row(
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(end = 8.dp),
+                text = name
+            )
+
+            Text(
+                color = Color.Gray,
+                fontSize = 12.sp,
+                text = if(isActive) "активно" else "не активно"
+            )
+        }
         Text(text = "uuid: $uuid")
         Text(text = "MAC: $mac")
         Text(text = "IPs: $ips")
