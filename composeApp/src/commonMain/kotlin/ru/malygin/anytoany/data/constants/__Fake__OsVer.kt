@@ -42,5 +42,5 @@ object __Fake__OsVer {
     )
 
 
-    private fun getOsName(osType: OsType): String = OsType.WINDOWS.osType
+    private fun getOsName(osType: OsType): String = osType.osType
 }

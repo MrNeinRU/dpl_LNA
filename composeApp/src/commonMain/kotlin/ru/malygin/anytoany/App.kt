@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Dvr
+import androidx.compose.material.icons.automirrored.filled.Grading
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -14,6 +16,7 @@ import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import ru.malygin.anytoany.data.routing.HomeScreen
 import ru.malygin.anytoany.data.routing.LoginScreen
 import ru.malygin.anytoany.data.routing.getScreenRoute
 import ru.malygin.anytoany.ui.cmp.modalDrawerContent
@@ -49,7 +52,7 @@ fun App() {
                                 ),
                                 title = { Text(navigator.lastItem.getScreenRoute().titleRu) },
                                 navigationIcon = {
-                                    if (navigator.canPop) {
+                                    if (navigator.lastItem !is HomeScreen) {
                                         IconButton(onClick = { navigator.pop() }) {
                                             Icon(
                                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -69,6 +72,21 @@ fun App() {
                                         }
                                     }
                                 },
+                                actions = {
+                                    if (navigator.lastItem is HomeScreen)
+                                    IconButton(
+                                        onClick = {
+                                            coroutine.launch {
+                                                //todo to settings
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.Dvr,
+                                            contentDescription = null,
+                                        )
+                                    }
+                                }
                             )
                     }
                 ){pdV->

@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import ru.malygin.anytoany.data.dtos.FacilityDeviceHeader
@@ -24,7 +25,7 @@ import kotlin.uuid.ExperimentalUuidApi
 
 class HomeTab(
     val data: NetworkClustDto,
-    val onBack: (selectedFacilityDevice: FacilityDeviceHeader) -> Unit
+    val screenModel: LocalNetworkAnalyseModel
 ) : Tab{
 
     override val options: TabOptions
@@ -44,10 +45,12 @@ class HomeTab(
 
     @Composable
     override fun Content() {
+        val tb = LocalTabNavigator.current
         onSuccessInDplWrk2(
             data = data,
             onBack = {
-                onBack(it)
+                screenModel.pushSelectedFacilityDevice(it)
+                tb.current = MoreInfoTab(screenModel)
             }
         )
     }

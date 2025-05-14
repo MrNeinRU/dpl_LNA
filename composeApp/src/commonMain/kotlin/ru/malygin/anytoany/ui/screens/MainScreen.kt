@@ -3,15 +3,18 @@ package ru.malygin.anytoany.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowOutward
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -55,6 +58,25 @@ object MainScreen {
                 name = userInformation?.name,
                 post = userInformation?.post
             )
+            LazyColumn {
+
+                item {
+                    Spacer(
+                        modifier = Modifier.height(30.dp)
+                    )
+                    fakeInfoBlock()
+                }
+                item {
+                    Spacer(
+                        modifier = Modifier.height(30.dp)
+                    )
+                    fakeInfoBlock(
+                        title = "Задачи",
+                        itemName = "n-задача",
+                        itemDescription = "текст задачи"
+                    )
+                }
+            }
         }
     }
 
@@ -106,6 +128,65 @@ object MainScreen {
                             text = post!!
                         )
                     }
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun fakeInfoBlock(
+        title: String = "Обращения",
+        itemName: String = "в n-отдел",
+        itemDescription: String = "текст обращения"
+    ){
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Gray),
+            contentAlignment = Alignment.Center
+        ){
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(.88f)
+                    /*.widthIn(max = 322.dp)*/
+                    .padding(vertical = 1.dp)
+                    .background(Color.White)
+            ){
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth().padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = title)
+                        Icon(
+                            modifier = Modifier
+                                .clickable {  },
+                            imageVector = Icons.Default.ArrowOutward,
+                            contentDescription = null
+                        )
+                    }
+                    HorizontalDivider()
+
+                    (1..3).forEach {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth().padding(horizontal = 8.dp)
+                        ) {
+                            Text(
+                                fontSize = 16.sp,
+                                text = itemName,
+                            )
+                            Text(
+                                fontSize = 12.sp,
+                                text = itemDescription
+                            )
+                        }
+                    }
+
                 }
             }
         }

@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import ru.malygin.anytoany.data.enum_cls.RoutingPaths
 import ru.malygin.anytoany.data.routing.DplWrk2LocalNetworkAnalise
 import ru.malygin.anytoany.data.routing.DplWrkScreen
+import ru.malygin.anytoany.data.routing.LoginScreen
 
 
 @Composable
@@ -42,26 +43,55 @@ fun modalDrawerContent(
             }
         )
 
-        Column(
+
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .fillMaxSize()
         ){
-            RoutingPaths.entries.forEachIndexed { ind, rp->
+            Column(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ){
+                RoutingPaths.entries.forEachIndexed { ind, rp->
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        onClick = {
+                            coroutine.launch{
+                                if (rp.isUsed){
+                                    navigator.push(rp.screen!!)
+                                    drawerState.close()
+                                }
+                            }
+                        }
+                    ){
+                        Text(rp.nameOfScreen)
+                    }
+                    if (ind != RoutingPaths.entries.size - 1)
+                        Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ){
                 Button(
                     modifier = Modifier
                         .fillMaxWidth(),
                     onClick = {
                         coroutine.launch{
-                            navigator.push(rp.screen)
+                            navigator.push(LoginScreen())
                             drawerState.close()
                         }
                     }
                 ){
-                    Text(rp.nameOfScreen)
+                    Text("Выход")
                 }
-                if (ind != RoutingPaths.entries.size - 1)
-                    Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }

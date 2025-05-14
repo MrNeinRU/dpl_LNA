@@ -90,7 +90,7 @@ fun dplWrk2LocalNetworkAnalise(
                     }
                 }
                 is LocalNetworkAnalyseModel.State.Success -> {
-                    TabNavigator(HomeTab(data.data) {}){tbNav->
+                    TabNavigator(HomeTab(data.data, screenModel)){tbNav->
                         Scaffold(
                             content = {
                                 Column(
@@ -107,14 +107,9 @@ fun dplWrk2LocalNetworkAnalise(
                                         .fillMaxWidth()
                                         .height(60.dp),
                                 ){
-                                    TabNavigationItem(HomeTab(data.data, onBack = {
-                                        screenModel.pushSelectedFacilityDevice(it)
-                                        tbNav.current = MoreInfoTab(screenModel)
-                                    }))
+                                    TabNavigationItem(HomeTab(data.data, screenModel))
                                     VerticalDivider(thickness = 3.dp)
                                     TabNavigationItem(VisualPreviewNewTab(screenModel))
-//                                    VerticalDivider(thickness = 3.dp)
-//                                    TabNavigationItem(VisualPreviewTab(data.data, customData = "2"))
                                     VerticalDivider(thickness = 3.dp)
                                     TabNavigationItem(MoreInfoTab(screenModel))
                                 }
@@ -170,7 +165,7 @@ fun onSuccessInDplWrk2(
             Card.cardUi(
                 fD,
                 onMoreInfoClicked = {id->
-                    onBack(fD)
+                    onBack(id)
                 }
             )
             HorizontalDivider()
@@ -183,7 +178,7 @@ private object Card{
     @Composable
     fun cardUi(
         fD: FacilityDeviceHeader,
-        onMoreInfoClicked: (id:Uuid) -> Unit
+        onMoreInfoClicked: (fD: FacilityDeviceHeader) -> Unit
     ) {
         Column(
             modifier = Modifier
@@ -208,7 +203,7 @@ private object Card{
                 trustedBlock(fD.isTrusted)
                 Button(
                     onClick = {
-                        onMoreInfoClicked(fD.dv_id)
+                        onMoreInfoClicked(fD)
                     }
                 ){
                     Text(

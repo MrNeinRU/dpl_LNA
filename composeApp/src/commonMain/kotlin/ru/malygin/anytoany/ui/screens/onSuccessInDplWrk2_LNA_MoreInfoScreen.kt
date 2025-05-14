@@ -16,7 +16,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.registry.screenModule
@@ -81,12 +84,14 @@ private fun onSuccess(
 
             item {
                 oDa.uiMainInfo()
-                HorizontalDivider(thickness = 6.dp, color = Color.LightGray)
+                HorizontalDivider(thickness = 6.dp, color = Color.LightGray,
+                    modifier = Modifier.padding(vertical = 8.dp))
             }
 
             item {
                 oDa.uiPRG_Version()
-                HorizontalDivider(thickness = 6.dp, color = Color.LightGray)
+                HorizontalDivider(thickness = 6.dp, color = Color.LightGray,
+                    modifier = Modifier.padding(vertical = 8.dp))
             }
 
             item {
@@ -95,7 +100,8 @@ private fun onSuccess(
                          onReselectDevice(it)
                     }
                 )
-                HorizontalDivider(thickness = 6.dp, color = Color.LightGray)
+                HorizontalDivider(thickness = 6.dp, color = Color.LightGray,
+                    modifier = Modifier.padding(vertical = 8.dp))
             }
 
             item {
@@ -168,15 +174,40 @@ private class OnSuccessUiComponents(
         Column(
             modifier = stdModifier.then(modifier)
         ){
-            Text("Операционная система: ${osV.productName}")
-            Text("Версия ОС: ${osV.productVersion}")
+            val os_Name = buildAnnotatedString {
+                append("Операционная система: ")
+                withStyle(SpanStyle(background = Color.Cyan)){
+                    append(osV.productName)
+                }
+            }
+            val os_Ver = buildAnnotatedString {
+                append("Версия ОС: ")
+                withStyle(SpanStyle(background = Color.Cyan)){
+                    append(osV.productVersion)
+                }
+            }
+            Text(os_Name)
+            Text(os_Ver)
+
             prgV?.let {
                 HorizontalDivider()
-                Text("Программное обеспечение")
-                it.forEach { item->
-                    Text("Название: ${item.productName}")
-                    Text("Версия: ${item.productVersion}")
-                    HorizontalDivider()
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    text = "Программное обеспечение"
+                )
+                it.forEachIndexed {ind, item->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Text("Название: ${item.productName}")
+                        Text("Версия: ${item.productVersion}")
+                    }
+                    if (ind != it.size - 1)
+                        HorizontalDivider()
                 }
             }
         }

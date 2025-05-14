@@ -1,15 +1,15 @@
 package ru.malygin.anytoany.data.events
 
 import androidx.compose.runtime.Composable
-import ru.malygin.anytoany.data.dtos.PDFDto
+//import ru.malygin.anytoany.data.dtos.PDFDto
 import ru.malygin.anytoany.data.dtos.WifiNetworkDto
-import ru.malygin.anytoany.data.pdf.PDFWorker
-import java.io.BufferedReader
-import java.io.InputStreamReader
-
-actual fun createPDFile(pdfDto: PDFDto) =
-    PDFWorker(pdfDto).createPDF()
-
+//import ru.malygin.anytoany.data.pdf.PDFWorker
+//import java.io.BufferedReader
+//import java.io.InputStreamReader
+//
+//actual fun createPDFile(pdfDto: PDFDto) =
+//    PDFWorker(pdfDto).createPDF()
+//
 @Composable
 actual fun getNetStatePlatform(): List<WifiNetworkDto> {
 

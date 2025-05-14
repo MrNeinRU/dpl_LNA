@@ -68,7 +68,7 @@ kotlin {
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.apache.pdfbox)
+//            implementation(libs.apache.pdfbox)
 
             //navigation
             implementation(libs.voyager.navigator)
@@ -90,10 +90,10 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
 
             //EXPERIMENTAL//TODO
-            implementation(libs.pdf.dev.zt64.compose.pdf)
-            implementation(libs.pdf.icepdf)
-            implementation(libs.img.zoomable)
-            implementation(libs.img.coil3)
+//            implementation(libs.pdf.dev.zt64.compose.pdf)
+//            implementation(libs.pdf.icepdf)
+//            implementation(libs.img.zoomable)
+//            implementation(libs.img.coil3)
 
             //net
 //            implementation(libs.net.pcap4j.core)
@@ -138,12 +138,38 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "ru.malygin.anytoany.MainKt"
+        buildTypes.release.proguard{
+            version.set("7.7.0")
+            configurationFiles.from(
+                project.file("pro_guard.pro")
+            )
+            obfuscate.set(false)
+            optimize.set(false)
+        }
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
+            targetFormats(TargetFormat.Msi,TargetFormat.Exe, TargetFormat.Deb, TargetFormat.Rpm)
             packageName = "ru.malygin.anytoany"
             packageVersion = "1.0.0"
+            description = "Приложение для дипломного проекта"
 
+            outputBaseDir.set(
+                project.file("output")
+            )
+
+            windows{
+                packageName = "DPL_windows"
+                iconFile.set(
+                    project.file("icons/icon.ico")
+                )
+                dirChooser = true // предоставляет возможность выбрать папку для установки
+            }
+            linux{
+                packageName = "DPL_linux"
+                iconFile.set(
+                    project.file("icons/icon.png")
+                )
+            }
         }
     }
 }
