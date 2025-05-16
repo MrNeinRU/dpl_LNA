@@ -1,6 +1,10 @@
 package ru.malygin.anytoany.data.events
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
 //import ru.malygin.anytoany.data.dtos.PDFDto
 import ru.malygin.anytoany.data.dtos.WifiNetworkDto
 //import ru.malygin.anytoany.data.pdf.PDFWorker
@@ -35,4 +39,17 @@ actual fun getNetStatePlatform(): List<WifiNetworkDto> {
     }
 
     return ll
+}
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+actual fun Modifier.getScrollEvent(
+    eventType: PointerEventType?,
+    onEvent: (scroll: Double) -> Unit
+): Modifier {
+    return this.onPointerEvent(
+        PointerEventType.Scroll
+    ){
+        onEvent((it.changes.first().scrollDelta.y * -1).toDouble())
+    }
 }

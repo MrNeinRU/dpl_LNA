@@ -6,14 +6,16 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.flow.flowOf
 import ru.malygin.anytoany.data.dtos.PDFDto
 import ru.malygin.anytoany.data.dtos.WifiNetworkDto
 import ru.malygin.anytoany.data.wifi_analyser.WifiManager
 
-actual fun createPDFile(pdfDto: PDFDto) {
-}
+//actual fun createPDFile(pdfDto: PDFDto) {
+//}
 
 @Composable
 actual fun getNetStatePlatform(): List<WifiNetworkDto> {
@@ -45,4 +47,13 @@ actual fun getNetStatePlatform(): List<WifiNetworkDto> {
             locked = scResult.isPasspointNetwork,
         )
     }
+}
+
+
+
+actual fun Modifier.getScrollEvent(
+    eventType: PointerEventType?,
+    onEvent: (scroll: Double) -> Unit
+): Modifier {
+    return this
 }

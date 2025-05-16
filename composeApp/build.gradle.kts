@@ -111,9 +111,19 @@ android {
         applicationId = "ru.malygin.anytoany"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
+        versionCode = 3
         versionName = "1.0"
     }
+    applicationVariants.all {
+        outputs.all {
+            this as com.android.build.gradle.internal.api.ApkVariantOutputImpl
+            val buildName = buildType.name
+            val apkName = "DPL_" + defaultConfig.versionName + "_" + defaultConfig.versionCode + "_" + buildName + ".apk"
+
+            outputFileName = apkName
+        }
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
