@@ -53,6 +53,7 @@ fun App() {
                                 title = { Text(navigator.lastItem.getScreenRoute().titleRu) },
                                 navigationIcon = {
                                     if (navigator.lastItem !is HomeScreen) {
+
                                         IconButton(onClick = { navigator.pop() }) {
                                             Icon(
                                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,

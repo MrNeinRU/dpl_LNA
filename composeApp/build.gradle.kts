@@ -162,6 +162,7 @@ compose.desktop {
                 iconFile.set(
                     project.file("icons/icon.ico")
                 )
+                exePackageVersion = "1.0.0"
                 dirChooser = true // предоставляет возможность выбрать папку для установки
             }
             linux{
@@ -169,6 +170,7 @@ compose.desktop {
                 iconFile.set(
                     project.file("icons/icon.png")
                 )
+                rpmPackageVersion = "1.0.0"
             }
         }
     }
