@@ -1,6 +1,7 @@
 @file:Suppress("ClassName")
 package ru.malygin.anytoany.data.utils
 
+import ru.malygin.anytoany.data.constants.__Fake__IpPorts
 import ru.malygin.anytoany.data.constants.__Fake__OsVer
 import ru.malygin.anytoany.data.constants.__Fake__ProgVer
 import ru.malygin.anytoany.data.dtos.*
@@ -130,15 +131,15 @@ object FacilityUtils {
                 isTrusted = true,
                 isActive = true,
                 dv_os = __Fake__OsVer.windowsOs(),
-                dv_programs = listOf(
-                    __Fake__ProgVer.defaultProgram()
-                ),
+                dv_programs = __Fake__ProgVer.windowsList_1,
                 dv_info =
                     PC(
                         _networkInfo = NetworkDeviceInfo.PC(
                             ip = IpData(
                                 ip = __S__Const.PC_1_IP_192_168_1_10,
-                                allowedPorts = listOf(22, 3389)
+                                allowedPorts = __Fake__IpPorts.sshPorts
+                                    .plus(__Fake__IpPorts.remoteDesktopPorts)
+                                    .plus(__Fake__IpPorts.webPorts)
                             ),
                             mac = "00:00:00:00:01:10",
                         ),
@@ -176,14 +177,15 @@ object FacilityUtils {
                 dv_id = Uuid.random(),
                 isTrusted = true,
                 isActive = false,
-                dv_os = __Fake__OsVer.windowsOs(/*TODO()*/),
-                dv_programs = null/*TODO()*/,
+                dv_os = __Fake__OsVer.windowsOs(),
+                dv_programs = __Fake__ProgVer.windowsList_2,
                 dv_info =
                     PC(
                         _networkInfo = NetworkDeviceInfo.PC(
                             ip = IpData(
                                 ip = __S__Const.PC_2_IP_192_168_1_11,
-                                allowedPorts = listOf(22, 3389)
+                                allowedPorts = __Fake__IpPorts.sshPorts
+                                    .plus(__Fake__IpPorts.remoteDesktopPorts)
                             ),
                             mac = "00:00:00:00:01:11",
                         ),
@@ -222,7 +224,7 @@ object FacilityUtils {
                 dv_id = Uuid.random(),
                 isTrusted = true,
                 isActive = true,
-                dv_os = __Fake__OsVer.linuxOs(/*TODO()*/),
+                dv_os = __Fake__OsVer.linuxOs(),
                 dv_programs = null,
                 dv_info =
                     Router(
@@ -230,11 +232,13 @@ object FacilityUtils {
                             ip = listOf(
                                 IpData(
                                     ip = __S__Const.ROUTER_1_IP_192_168_1_1,
-                                    allowedPorts = listOf(22)
+                                    allowedPorts = __Fake__IpPorts.sshPorts
+                                        .plus(__Fake__IpPorts.webPorts)
                                 ),
                                 IpData(
                                     ip = __S__Const.ROUTER_1_IP_10_10_1_2,
-                                    allowedPorts = listOf(22)
+                                    allowedPorts = __Fake__IpPorts.sshPorts
+                                        .plus(__Fake__IpPorts.webPorts)
                                 ),
                             ),
                             mac = "00:00:00:00:01:01",
@@ -272,7 +276,7 @@ object FacilityUtils {
                 dv_id = Uuid.random(),
                 isTrusted = true,
                 isActive = true,
-                dv_os = __Fake__OsVer.linuxOs(/*TODO()*/),
+                dv_os = __Fake__OsVer.linuxOs(),
                 dv_programs = null,
                 dv_info =
                     Switch(
@@ -280,15 +284,17 @@ object FacilityUtils {
                             ip = listOf(
                                 IpData(
                                     ip = __S__Const.SWITCH_1_IP_10_10_1_3,
-                                    allowedPorts = listOf(22)
+                                    allowedPorts = __Fake__IpPorts.sshPorts
+                                        .plus(__Fake__IpPorts.webPorts)
                                 ),// к верхнему роутеру \
                                 IpData(
                                     ip = __S__Const.SWITCH_1_IP_10_10_1_1,
-                                    allowedPorts = listOf(22)
+                                    allowedPorts = __Fake__IpPorts.sshPorts
                                 ), // в интарнет          > может переделать в один 10.10.1.1
                                 IpData(
                                     ip = __S__Const.SWITCH_1_IP_10_10_1_4,
-                                    allowedPorts = listOf(22)
+                                    allowedPorts = __Fake__IpPorts.sshPorts
+                                        .plus(__Fake__IpPorts.webPorts)
                                 ), // к нижнему роутеру /
                             ),
                             mac = "00:00:00:00:00:01"
@@ -326,7 +332,7 @@ object FacilityUtils {
                 dv_id = Uuid.random(),
                 isTrusted = true,
                 isActive = true,
-                dv_os = __Fake__OsVer.linuxOs(/*TODO()*/),
+                dv_os = __Fake__OsVer.linuxOs("OpenWrt 22.03.6"),
                 dv_programs = null,
                 dv_info =
                     Router(
@@ -334,11 +340,12 @@ object FacilityUtils {
                             ip = listOf(
                                 IpData(
                                     ip = __S__Const.ROUTER_2_IP_10_10_1_5,
-                                    allowedPorts = listOf(22)
+                                    allowedPorts = __Fake__IpPorts.sshPorts
+                                        .plus(__Fake__IpPorts.webPorts)
                                 ),
                                 IpData(
                                     ip = __S__Const.ROUTER_2_IP_192_168_0_1,
-                                    allowedPorts = listOf(22)
+                                    allowedPorts = __Fake__IpPorts.sshPorts
                                 ),
                             ),
                             mac = "00:00:00:00:02:01",
@@ -377,14 +384,17 @@ object FacilityUtils {
                 isTrusted = true,
                 isActive = true,
                 dv_os = __Fake__OsVer.windowsServerOs(),
-                dv_programs = null,
+                dv_programs = __Fake__ProgVer.windowsServerList_1,
                 dv_info =
                     Server(
                         _networkInfo = NetworkDeviceInfo.Server(
                             ip = listOf(
                                 IpData(
                                     ip = __S__Const.SERVER_1_IP_192_168_0_10,
-                                    allowedPorts = listOf(20, 21, 22, 80)
+                                    allowedPorts = __Fake__IpPorts.sshPorts
+                                        .plus(__Fake__IpPorts.ftpPorts)
+                                        .plus(__Fake__IpPorts.webPorts)
+                                        .plus(__Fake__IpPorts.remoteDesktopPorts)
                                 ),
                             ),
                             mac = "00:00:00:00:02:02"
@@ -430,14 +440,15 @@ object FacilityUtils {
                 dv_id = Uuid.random(),
                 isTrusted = true,
                 isActive = true,
-                dv_os = __Fake__OsVer.linuxOs(/*TODO()*/),
-                dv_programs = null,
+                dv_os = __Fake__OsVer.linuxOs(),
+                dv_programs = __Fake__ProgVer.machineList_1,
                 dv_info =
                     Machine(
                         _networkInfo = NetworkDeviceInfo.Machine(
                             ip = IpData(
                                 ip = __S__Const.MACHINE_1_IP_192_168_0_20,
-                                allowedPorts = listOf(20, 21, 22)
+                                allowedPorts = __Fake__IpPorts.sshPorts
+                                    .plus(__Fake__IpPorts.ftpPorts)
                             ),
                             mac = "00:00:00:00:02:03"
                         ),

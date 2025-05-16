@@ -28,6 +28,13 @@ data class FacilityDeviceHeader(
     val dv_info: FacilityDevice
 )
 
+fun List<FacilityDeviceHeader>.getDeviceById(dvId: Uuid): FacilityDeviceHeader? = this.find { fdh->
+    fdh.dv_id == dvId
+}
+fun List<FacilityDeviceHeader>.getDeviceById(dvId: String): FacilityDeviceHeader? = this.find { fdh->
+    fdh.dv_id.toString() == dvId
+}
+
 sealed class FacilityDevice(
     realConnection: List<FacilityDeviceConnections>, // список физических соединений
     virtualConnection: List<FacilityDeviceConnections>?, // список виртуальных соединений (куда может подключиться устройство) (доступность)
@@ -163,17 +170,6 @@ sealed class NetworkDeviceInfo(
         mac
     )
 
-//    fun getUiIPs(): IpData {
-//        return when (this) {
-//            is Machine -> this.ip
-//            is PC -> this.ip
-//            is Router -> this.ip
-//            is Server -> this.ip
-//            is Switch -> this.ip
-//            is UnknownDevice -> this.ip
-//        }
-//    }
-
     fun getUiMAC(): String {
         return when (this) {
             is Machine -> this.mac
@@ -195,17 +191,6 @@ sealed class NetworkDeviceInfo(
             is UnknownDevice -> listOf(this.ip)
         }
     }
-
-//    fun getUiAllowedPorts(): List<Int> {
-//        return when (this) {
-//            is Machine -> this.allowedPorts
-//            is PC -> this.allowedPorts
-//            is Router -> this.allowedPorts
-//            is Server -> this.allowedPorts
-//            is Switch -> this.allowedPorts
-//            is UnknownDevice -> this.allowedPorts
-//        }
-//    }
 }
 
 data class FacilityDeviceConnections(
@@ -222,25 +207,3 @@ data class IpData(
     val ip: String,
     val allowedPorts: List<Int>
 )
-
-object IpUtils {
-    fun List<Int>.toPorts(): String {
-        return if (this.isNotEmpty()) this.toPortsList().joinToString(separator = ", ") else "?"
-    }
-
-    private fun List<Int>.toPortsList(): List<String> {
-        return this.map { prt->
-            listOfPorts.find { para->
-                para.first == prt
-            }?.second?.plus("($prt)") ?: run { "NoN($prt)"}
-        }
-    }
-
-    private val listOfPorts: List<Pair<Int, String>> = listOf(
-        20 to "FTP",
-        21 to "FTP",
-        22 to "SSH",
-        80 to "HTTP",
-        3389 to "RDP"
-    )
-}

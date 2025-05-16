@@ -7,5 +7,8 @@ object __Fake__database_DAO {
     fun getStorageToken() : String? = "123"
 
     //@UPSERT()
-    suspend fun setStorageToken(token: String) = true
+    suspend fun setStorageToken(token: String): Boolean {
+        //doJob()
+        return true
+    }
 }

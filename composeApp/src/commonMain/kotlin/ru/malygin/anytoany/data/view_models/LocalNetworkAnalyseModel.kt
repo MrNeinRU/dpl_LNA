@@ -1,9 +1,11 @@
 package ru.malygin.anytoany.data.view_models
 
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.TweenSpec
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -11,24 +13,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import anytoany.composeapp.generated.resources.*
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import coil3.compose.rememberAsyncImagePainter
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
-import ovh.plrapps.mapcompose.api.addLayer
-import ovh.plrapps.mapcompose.api.addMarker
-import ovh.plrapps.mapcompose.api.addPath
+import ovh.plrapps.mapcompose.api.*
 import ovh.plrapps.mapcompose.ui.state.MapState
-import ru.malygin.anytoany.Platform
 import ru.malygin.anytoany.data.adapters.NetworkingAdapter
 import ru.malygin.anytoany.data.adapters.NetworkingState_GetFacilityCluster
 import ru.malygin.anytoany.data.constants.__Fake__database_DAO
@@ -36,7 +35,9 @@ import ru.malygin.anytoany.data.data_cls.VisualData
 import ru.malygin.anytoany.data.dtos.FacilityDevice
 import ru.malygin.anytoany.data.dtos.FacilityDeviceHeader
 import ru.malygin.anytoany.data.dtos.NetworkClustDto
+import ru.malygin.anytoany.data.dtos.getDeviceById
 import ru.malygin.anytoany.data.utils.ImgReader
+import ru.malygin.anytoany.ui.screens.tab_navigation.MoreInfoTab
 import kotlin.uuid.ExperimentalUuidApi
 
 class LocalNetworkAnalyseModel(
@@ -49,9 +50,11 @@ class LocalNetworkAnalyseModel(
         data class Error(val message:String): State()
         data class Success(val data: NetworkClustDto): State()
     }
+    private var job: Job? = null
+    private val spec = TweenSpec<Float>(200, easing = FastOutLinearInEasing)
+
     private val token = database.getStorageToken()
 
-    //-
     private var _selectedFacilityDevice = MutableStateFlow<FacilityDeviceHeader?>(null)
 
     var selectedFacilityDevice = _selectedFacilityDevice.asStateFlow()
@@ -61,7 +64,6 @@ class LocalNetworkAnalyseModel(
             _selectedFacilityDevice.emit(fd)
         }
     }
-    //-
 
 
     init {
@@ -82,20 +84,87 @@ class LocalNetworkAnalyseModel(
     }
 
 
-
-
-
     private val tileStreamProvider = ImgReader.readMapLayout()
     val mapState = MapState(4, 2048, 1024).apply {
 
         addLayer(tileStreamProvider)
+        onMarkerClick { id, x, y ->
+            println("marker id: $id, x: $x, y: $y")
+
+            addCallout(
+                id = id, x = x, y = y,
+                absoluteOffset = DpOffset(0.dp, (-80).dp),
+                autoDismiss = id != TAP_TO_DISMISS_ID,
+                clickable = id == TAP_TO_DISMISS_ID,
+            ){
+                val tabNavigator= LocalTabNavigator.current
+                onClickTipWithButton {
+                    when(val l = state.value){
+                        is State.Success -> {
+                            l.data.devices.getDeviceById(id)?.let {
+                                pushSelectedFacilityDevice(it)
+                                tabNavigator.current = MoreInfoTab(this@LocalNetworkAnalyseModel)
+                            }
+                        }
+                        else->Unit
+                    }
+                }
+            }
+        }
+        onPathClick { id, x, y ->
+            println("path id: $id, x: $x, y: $y")
+
+            val firstDv = id.split(DEFAULT_SPLITTER).first()
+            val secondDv = id.split(DEFAULT_SPLITTER).last()
+
+            addCallout(
+                id = id, x = x, y = y,
+                absoluteOffset = DpOffset(0.dp, (-50).dp),
+                autoDismiss = id != TAP_TO_DISMISS_ID,
+                clickable = id == TAP_TO_DISMISS_ID,
+            ){
+                when(val l = state.value){
+                    is State.Success -> {
+                        l.data.devices.getDeviceById(firstDv)?.let {dvF->
+                            l.data.devices.getDeviceById(secondDv)?.let{dvS->
+                                onClickTip(
+                                    text = "test ${dvF.dv_info.getUiName()} ${dvS.dv_info.getUiName()}"
+                                )
+                            }
+                        }
+                    }
+                    else->Unit
+                }
+            }
+        }
     }
 
+    fun scrollZoom(
+        scale: Double,
+    ){
+        job?.cancel()
 
+        with(mapState){
+            job = screenModelScope.launch {
+                println("scale = ${this@with.scale}")
+                scrollTo(
+                    x = this@with.centroidX,
+                    y = this@with.centroidY,
+                    destScale = this@with.scale.plus(scale),
+                    animationSpec = spec
+                )
+            }
+        }
+    }
 
 
     override fun onDispose() {
         println("LocalNetworkAnalyseModel is destroyed")
+    }
+
+    companion object{
+        const val TAP_TO_DISMISS_ID = "tap_to_dismiss_id"
+        const val DEFAULT_SPLITTER = "_to_"
     }
 }
 
@@ -165,18 +234,20 @@ private fun doVisualRealConnections(
         mapState.addMarker(
             id = "${b.facilityDeviceHeader.dv_id}",
             x = b.offset.x.toDouble(),
-            y = b.offset.y.toDouble()
+            y = b.offset.y.toDouble(),
+            clickable = true
         ){
             testMarkerIcon(b.facilityDeviceHeader.dv_info.getUiName(), b)
+
         }
     }
     //устанавливаем пути
     pathsList.forEach { path->
         mapState.addPath(
-            id = "${path.first}_to_${path.second}",
+            id = "${path.first.facilityDeviceHeader.dv_id}${LocalNetworkAnalyseModel.DEFAULT_SPLITTER}${path.second.facilityDeviceHeader.dv_id}",
             color = Color(0xFF448AFF).copy(alpha = .7f),
             fillColor = Color(0xFF448AFF).copy(alpha = .3f),
-            clickable = true
+            clickable = false//todo true
         ){
             addPoint(path.first.offset.x.toDouble(), path.first.offset.y.toDouble())
             addPoint(path.second.offset.x.toDouble(), path.second.offset.y.toDouble())
@@ -184,7 +255,7 @@ private fun doVisualRealConnections(
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 private fun testMarkerIcon(type:String, vd: VisualData){
 
@@ -195,7 +266,8 @@ private fun testMarkerIcon(type:String, vd: VisualData){
         modifier = Modifier
             .clip(MaterialTheme.shapes.large)
             .background(MaterialTheme.colorScheme.tertiaryContainer)
-            .padding(10.dp),
+            .padding(10.dp)
+            ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
@@ -206,5 +278,39 @@ private fun testMarkerIcon(type:String, vd: VisualData){
         )
         Text(type)
     }
+}
 
+@Composable
+private fun onClickTipWithButton(
+    onDo: () -> Unit
+){
+    Box(
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.small)
+            .background(Color(209, 156, 31))
+            .padding(8.dp)
+    ){
+        Button(
+            onClick = {onDo()}
+        ){
+            Text("Подробнее")
+        }
+    }
+}
+@Composable
+private fun onClickTip(
+    text: String? = null
+){
+    Box(
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.small)
+            .background(Color(209, 156, 31))
+            .padding(8.dp)
+    ){
+        text?.let {
+            Text(text)
+        }?: run {
+            Text("нет данных")
+        }
+    }
 }

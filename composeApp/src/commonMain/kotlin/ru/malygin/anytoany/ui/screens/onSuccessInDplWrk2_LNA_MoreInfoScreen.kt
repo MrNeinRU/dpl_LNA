@@ -4,13 +4,11 @@
 package ru.malygin.anytoany.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -18,15 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cafe.adriel.voyager.core.registry.screenModule
-import ru.malygin.anytoany.data.dtos.FacilityDevice
+import ru.malygin.anytoany.data.constants.__Fake__IpPorts.toPorts
 import ru.malygin.anytoany.data.dtos.FacilityDeviceHeader
-import ru.malygin.anytoany.data.dtos.IpUtils.toPorts
-import ru.malygin.anytoany.data.dtos.NetworkClustDto
 import ru.malygin.anytoany.data.utils.FacilityUtils
 import ru.malygin.anytoany.data.view_models.LocalNetworkAnalyseModel
 import ru.malygin.anytoany.ui.cmp.trustedBlock
@@ -72,7 +69,8 @@ private fun onSuccess(
     ){
         LazyColumn(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
@@ -126,10 +124,17 @@ private class OnSuccessUiComponents(
         .padding(horizontal = 4.dp)
 
     @Composable
-    private fun uiUiText(modifier: Modifier = uiTextModifier,text: String) =
+    private fun uiUiText(
+        modifier: Modifier = uiTextModifier,
+        text: String,
+        fontWeight: FontWeight? = null,
+        textAlignment: TextAlign? = null,
+    ) =
         Text(
             modifier = modifier,
-            text = text
+            text = text,
+            fontWeight = fontWeight,
+            textAlign = textAlignment
         )
 
     @Composable
@@ -154,13 +159,13 @@ private class OnSuccessUiComponents(
                 )
             }
             uiUiText(
-                text = currentDevice.dv_id.toString()
+                text = "id: ${currentDevice.dv_id}"
             )
             uiUiText(
-                text = currentDevice.dv_info.getUiNetInfo().getUiMAC()
+                text = "MAC: ${currentDevice.dv_info.getUiNetInfo().getUiMAC()}"
             )
             uiUiText(
-                text = currentDevice.dv_info.getUiNetInfo().getUiIPs().joinToString(","){it.ip}
+                text = "ips: ${currentDevice.dv_info.getUiNetInfo().getUiIPs().joinToString(", "){it.ip}}"
             )
         }
     }
@@ -176,13 +181,13 @@ private class OnSuccessUiComponents(
         ){
             val os_Name = buildAnnotatedString {
                 append("Операционная система: ")
-                withStyle(SpanStyle(background = Color.Cyan)){
+                withStyle(SpanStyle(fontWeight = FontWeight.Bold)){
                     append(osV.productName)
                 }
             }
             val os_Ver = buildAnnotatedString {
                 append("Версия ОС: ")
-                withStyle(SpanStyle(background = Color.Cyan)){
+                withStyle(SpanStyle(fontWeight = FontWeight.Bold)){
                     append(osV.productVersion)
                 }
             }
@@ -195,16 +200,52 @@ private class OnSuccessUiComponents(
                     modifier = Modifier
                         .fillMaxWidth(),
                     textAlign = TextAlign.Center,
+                    textDecoration = TextDecoration.Underline,
                     text = "Программное обеспечение"
                 )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .weight(1f)
+                        ,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        text = "Название",
+                        )
+                    Text(
+                        modifier = Modifier
+                            .weight(1f)
+                        ,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        text = "Версия"
+                    )
+                }
+                HorizontalDivider()
                 it.forEachIndexed {ind, item->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        Text("Название: ${item.productName}")
-                        Text("Версия: ${item.productVersion}")
+                        Text(
+                            modifier = Modifier
+                                .weight(1f)
+                            ,
+                            textAlign = TextAlign.Center,
+                            text = item.productName
+                        )
+                        Text(
+                            modifier = Modifier
+                                .weight(1f)
+                            ,
+                            textAlign = TextAlign.Center,
+                            text = item.productVersion
+                        )
                     }
                     if (ind != it.size - 1)
                         HorizontalDivider()
@@ -234,13 +275,14 @@ private class OnSuccessUiComponents(
                 val connectToDevice = FacilityUtils.getFacilityDeviceByIp(item._connectIn.to)
                 connectToDevice?.let {dv->
                     uiUiText(
+                        fontWeight = FontWeight.Bold,
                         text = dv.dv_info.getUiName()
                     )
                     uiUiText(
-                        text = dv.dv_id.toString()
+                        text = "id: ${dv.dv_id}"
                     )
                     uiUiText(
-                        text = dv.dv_info.getUiNetInfo().getUiMAC()
+                        text = "MAC: ${dv.dv_info.getUiNetInfo().getUiMAC()}"
                     )
 
                     Button(
@@ -270,8 +312,32 @@ private class OnSuccessUiComponents(
                     .fillMaxWidth()
                     .padding(top = 4.dp, bottom = 8.dp),
                 textAlign = TextAlign.Center,
+                textDecoration = TextDecoration.Underline,
                 text = "Разрешенные порты"
             )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                uiUiText(
+                    modifier = Modifier
+                        .weight(1f),
+                    text = "IP",
+                    fontWeight = FontWeight.Bold,
+                    textAlignment = TextAlign.Center
+                )
+                uiUiText(
+                    modifier = Modifier
+                        .weight(1f),
+                    text = "Порты",
+                    fontWeight = FontWeight.Bold,
+                    textAlignment = TextAlign.Center
+                )
+            }
+            HorizontalDivider()
+
             allowedPorts.forEach { item->
                 Row(
                     modifier = Modifier
@@ -279,12 +345,16 @@ private class OnSuccessUiComponents(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     uiUiText(
-                        modifier = Modifier,
-                        text = item.ip
+                        modifier = Modifier
+                            .weight(1f),
+                        text = item.ip,
+                        textAlignment = TextAlign.Center
                     )
                     uiUiText(
-                        modifier = Modifier,
-                        text = item.allowedPorts.toPorts()
+                        modifier = Modifier
+                            .weight(1f),
+                        text = item.allowedPorts.toPorts(),
+                        textAlignment = TextAlign.Center
                     )
                 }
                 HorizontalDivider()
