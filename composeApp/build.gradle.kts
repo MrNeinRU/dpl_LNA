@@ -70,20 +70,29 @@ kotlin {
             implementation(libs.kotlinx.datetime)
 //            implementation(libs.apache.pdfbox)
 
+            //ktor client
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.okhttp)
+            //ktor client
+
             //navigation
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.tab.navigator)
             implementation(libs.voyager.screenmodel)
             //navigation
 
+            //map
             implementation(libs.kotlin.graphs)
             implementation(libs.mapcompose.mp)
+            //map
 
+            //local database
             implementation(libs.room.runtime)
 //            implementation(libs.room.gradle.plugin)
             implementation(libs.room.compiler)
             implementation(libs.room.sqlite)
-
+            //local database
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

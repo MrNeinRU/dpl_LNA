@@ -4,6 +4,7 @@
 package ru.malygin.anytoany.data.dtos
 
 import ru.malygin.anytoany.data.data_cls.Product_Version_Save
+import ru.malygin.anytoany.data.utils.FacilityUtils
 import ru.malygin.anytoany.data.utils.FacilityUtils.getNormalizedNameOfFacility
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -27,13 +28,6 @@ data class FacilityDeviceHeader(
     val dv_programs: List<Product_Version_Save>? = null,
     val dv_info: FacilityDevice
 )
-
-fun List<FacilityDeviceHeader>.getDeviceById(dvId: Uuid): FacilityDeviceHeader? = this.find { fdh->
-    fdh.dv_id == dvId
-}
-fun List<FacilityDeviceHeader>.getDeviceById(dvId: String): FacilityDeviceHeader? = this.find { fdh->
-    fdh.dv_id.toString() == dvId
-}
 
 sealed class FacilityDevice(
     realConnection: List<FacilityDeviceConnections>, // список физических соединений
@@ -193,6 +187,8 @@ sealed class NetworkDeviceInfo(
     }
 }
 
+//dataclass
+
 data class FacilityDeviceConnections(
     val _device: String,//FacilityDevice,
     val _connectIn: FacilityDeviceRealConnectionPath//String //IP адрес подключения
@@ -207,3 +203,20 @@ data class IpData(
     val ip: String,
     val allowedPorts: List<Int>
 )
+
+//functional
+
+fun List<FacilityDeviceHeader>.getDeviceById(dvId: Uuid): FacilityDeviceHeader? = this.find { fdh->
+    fdh.dv_id == dvId
+}
+fun List<FacilityDeviceHeader>.getDeviceById(dvId: String): FacilityDeviceHeader? = this.find { fdh->
+    fdh.dv_id.toString() == dvId
+}
+
+fun String.getNetworkClustDto(): NetworkClustDto? {
+    //
+    //преобразование JSON в DTO
+    //
+    //
+    return FacilityUtils.generateFakeFacilitiesNetworkClustDto()
+}

@@ -17,6 +17,7 @@ icepdf-v = "7.2.3"
 voyager-v = "1.1.0-beta03"
 room_v = "2.7.1"
 sqlite_v = "2.5.1"
+ktor_v="3.1.3"
 
 
 [libraries]
@@ -40,6 +41,10 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-gradle-plugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room_v" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room_v" }
 room-sqlite = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqlite_v" }
+
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor_v"}
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor_v"}
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor_v"}
 
 #---
 

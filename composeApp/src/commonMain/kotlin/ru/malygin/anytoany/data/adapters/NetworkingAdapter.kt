@@ -7,6 +7,7 @@ import ru.malygin.anytoany.data.constants.__Fake__UserInfo
 import ru.malygin.anytoany.data.constants.__Fake__database_cns
 import ru.malygin.anytoany.data.data_cls.UserInformation
 import ru.malygin.anytoany.data.dtos.NetworkClustDto
+import ru.malygin.anytoany.data.exceptions.TokenIsNullExc
 import ru.malygin.anytoany.data.utils.FacilityUtils
 
 
@@ -17,8 +18,9 @@ class NetworkingAdapter {
     /**
      * если будет серверное взаимодействие, то заменить NetworkClustDto на NetworkingState_GetFacilityCluster для дальнейшей обработки
      */
-    suspend fun getFacilityCluster(token: String?):NetworkingState_GetFacilityCluster?{
-        if (token == null) return null
+    suspend fun getFacilityCluster(token: String?):NetworkingState_GetFacilityCluster{
+        if (token == null) return NetworkingState_GetFacilityCluster
+            .Error(TokenIsNullExc())
         // имитация задержки сетевого взаимодействия
         delay(1000)//4000
 
@@ -82,7 +84,7 @@ sealed class NetworkingState_GetFacilityCluster {
     ): NetworkingState_GetFacilityCluster()
 
     data class Error(
-        val message: String
+        val message: Exception
     ): NetworkingState_GetFacilityCluster()
 }
 
