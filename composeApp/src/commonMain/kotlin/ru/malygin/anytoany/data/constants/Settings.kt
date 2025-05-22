@@ -5,7 +5,7 @@ import ru.malygin.anytoany.data.enum_cls.NetQueryMethods
 object Settings {
     private const val METHOD = "method"
 
-    const val TOKEN_VALID = true
+    const val TOKEN_VALID = false
 
     const val FACILITY_URL_LOCAL_HOST  = "localhost"
 
