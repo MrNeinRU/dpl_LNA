@@ -3,6 +3,9 @@
 
 package ru.malygin.anytoany.data.dtos
 
+import androidx.annotation.IntRange
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import ru.malygin.anytoany.data.data_cls.Product_Version_Save
 import ru.malygin.anytoany.data.utils.FacilityUtils
 import ru.malygin.anytoany.data.utils.FacilityUtils.getNormalizedNameOfFacility
@@ -12,7 +15,10 @@ import kotlin.uuid.Uuid
 /**
  * DTO для представления сетевой информации о локальной сети предприятия
  */
+@Serializable
+@SerialName("network_clust_dto")
 data class NetworkClustDto(
+    @IntRange(from = -1)
     val netId: Int = -1,
     val timeStamp: Long = 0,
     val devices: List<FacilityDeviceHeader>
@@ -20,6 +26,8 @@ data class NetworkClustDto(
     val normalizedName: String = getNormalizedNameOfFacility(netId)
 }
 
+@Serializable
+@SerialName("facility_device_header")
 data class FacilityDeviceHeader(
     val dv_id: Uuid,
     val isTrusted: Boolean = false,
@@ -29,10 +37,14 @@ data class FacilityDeviceHeader(
     val dv_info: FacilityDevice
 )
 
+@Serializable
+@SerialName("facility_device")
 sealed class FacilityDevice(
-    realConnection: List<FacilityDeviceConnections>, // список физических соединений
-    virtualConnection: List<FacilityDeviceConnections>?, // список виртуальных соединений (куда может подключиться устройство) (доступность)
+    val realConnection: List<FacilityDeviceConnections>, // список физических соединений
+    val virtualConnection: List<FacilityDeviceConnections>?, // список виртуальных соединений (куда может подключиться устройство) (доступность)
 ){
+    @Serializable
+    @SerialName("pc")
     data class PC(
         val _networkInfo: NetworkDeviceInfo.PC,
         val _realConnection: List<FacilityDeviceConnections>,
@@ -40,6 +52,8 @@ sealed class FacilityDevice(
     ) : FacilityDevice(_realConnection, _virtualConnection)
 
     //маршрутизатор
+    @Serializable
+    @SerialName("router")
     data class Router(
         val _networkInfo: NetworkDeviceInfo.Router,
         val _realConnection: List<FacilityDeviceConnections>,
@@ -47,12 +61,16 @@ sealed class FacilityDevice(
     ) : FacilityDevice(_realConnection, _virtualConnection)
 
     //коммутатор
+    @Serializable
+    @SerialName("switch")
     data class Switch(
         val _networkInfo: NetworkDeviceInfo.Switch,
         val _realConnection: List<FacilityDeviceConnections>,
         val _virtualConnection: List<FacilityDeviceConnections>?,
     ) : FacilityDevice(_realConnection, _virtualConnection)
 
+    @Serializable
+    @SerialName("server")
     data class Server(
         val _networkInfo: NetworkDeviceInfo.Server,
         val _realConnection: List<FacilityDeviceConnections>,
@@ -60,12 +78,16 @@ sealed class FacilityDevice(
     ) : FacilityDevice(_realConnection, _virtualConnection)
 
     //станок
+    @Serializable
+    @SerialName("machine")
     data class Machine(
         val _networkInfo: NetworkDeviceInfo.Machine,
         val _realConnection: List<FacilityDeviceConnections>,
         val _virtualConnection: List<FacilityDeviceConnections>?,
     )  : FacilityDevice(_realConnection, _virtualConnection)
 
+    @Serializable
+    @SerialName("unknown_device")
     data class UnknownDevice(
         val _networkInfo: NetworkDeviceInfo.UnknownDevice,
         val _realConnection: List<FacilityDeviceConnections>,
@@ -119,9 +141,13 @@ sealed class FacilityDevice(
 
 }
 
+@Serializable
+@SerialName("network_device_info")
 sealed class NetworkDeviceInfo(
-    mac: String,
+    val _mac: String,
 ){
+    @Serializable
+    @SerialName("pc")
     data class PC(
         val ip: IpData,
         val mac: String,
@@ -129,6 +155,8 @@ sealed class NetworkDeviceInfo(
         mac
     )
 
+    @Serializable
+    @SerialName("router")
     data class Router(
         val ip: List<IpData>,
         val mac: String,
@@ -136,6 +164,8 @@ sealed class NetworkDeviceInfo(
         mac
     )
 
+    @Serializable
+    @SerialName("switch")
     data class Switch(
         val ip: List<IpData>,
         val mac: String,
@@ -143,6 +173,8 @@ sealed class NetworkDeviceInfo(
         mac
     )
 
+    @Serializable
+    @SerialName("server")
     data class Server(
         val ip: List<IpData>,
         val mac: String,
@@ -150,6 +182,8 @@ sealed class NetworkDeviceInfo(
         mac
     )
 
+    @Serializable
+    @SerialName("machine")
     data class Machine(
         val ip: IpData,
         val mac: String,
@@ -157,6 +191,8 @@ sealed class NetworkDeviceInfo(
         mac
     )
 
+    @Serializable
+    @SerialName("unknown_device")
     data class UnknownDevice(
         val ip: IpData,
         val mac: String,
@@ -189,16 +225,22 @@ sealed class NetworkDeviceInfo(
 
 //dataclass
 
+@Serializable
+@SerialName("facility_device_connections")
 data class FacilityDeviceConnections(
     val _device: String,//FacilityDevice,
     val _connectIn: FacilityDeviceRealConnectionPath//String //IP адрес подключения
 )
 
+@Serializable
+@SerialName("facility_device_real_connection_path")
 data class FacilityDeviceRealConnectionPath(
     val from: String, //от этого ip
     val to: String //до этого ip
 )
 
+@Serializable
+@SerialName("ip_data")
 data class IpData(
     val ip: String,
     val allowedPorts: List<Int>

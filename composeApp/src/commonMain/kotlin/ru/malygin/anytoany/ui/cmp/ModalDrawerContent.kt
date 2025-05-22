@@ -2,7 +2,9 @@ package ru.malygin.anytoany.ui.cmp
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -17,6 +19,7 @@ import ru.malygin.anytoany.data.routing.DplWrkScreen
 import ru.malygin.anytoany.data.routing.LoginScreen
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun modalDrawerContent(
     drawerState: DrawerState,
@@ -56,6 +59,7 @@ fun modalDrawerContent(
             ){
                 RoutingPaths.entries.forEachIndexed { ind, rp->
                     Button(
+                        shape = MaterialTheme.shapes.small,
                         modifier = Modifier
                             .fillMaxWidth(),
                         onClick = {
@@ -81,6 +85,7 @@ fun modalDrawerContent(
                     .padding(horizontal = 16.dp)
             ){
                 Button(
+                    shape = MaterialTheme.shapes.small,
                     modifier = Modifier
                         .fillMaxWidth(),
                     onClick = {
@@ -90,6 +95,10 @@ fun modalDrawerContent(
                         }
                     }
                 ){
+                    Icon(
+                        Icons.AutoMirrored.Filled.Logout,
+                        contentDescription = null,
+                    )
                     Text("Выход")
                 }
             }

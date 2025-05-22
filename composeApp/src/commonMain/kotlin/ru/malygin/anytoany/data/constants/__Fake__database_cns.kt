@@ -8,3 +8,5 @@ object __Fake__database_cns {
     val NET_USER_IDENTIFIER = __Fake__UserInfo.IT_ADMIN.id
 
 }
+
+fun String.toToken(): String? = if (this == "null") null else this

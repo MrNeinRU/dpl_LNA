@@ -43,7 +43,6 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 room-sqlite = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqlite_v" }
 
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor_v"}
-ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor_v"}
 ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor_v"}
 
 #---

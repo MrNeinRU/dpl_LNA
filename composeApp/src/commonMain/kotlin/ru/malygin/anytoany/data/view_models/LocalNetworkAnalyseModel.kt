@@ -69,9 +69,8 @@ class LocalNetworkAnalyseModel(
     init {
         screenModelScope.launch {
             when (val facInfo = networkingAdapter.getFacilityCluster(token)) {
-                is NetworkingState_GetFacilityCluster.Error -> mutableState.value = State.Error(facInfo.message)
+                is NetworkingState_GetFacilityCluster.Error -> mutableState.value = State.Error(facInfo.message.message?:"Error")
                 is NetworkingState_GetFacilityCluster.Success -> mutableState.value = State.Success(facInfo.data)
-                null -> State.Error("Token is null")
             }
 
             when(val nCD = mutableState.value){

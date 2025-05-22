@@ -48,11 +48,6 @@ object MainScreen {
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "_${getTodayDate()}_",
-                fontSize = 24.sp,
-                textAlign = TextAlign.Center
-            )
             personalInfo(
                 icon = img,
                 name = userInformation?.name,

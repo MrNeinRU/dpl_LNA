@@ -16,6 +16,7 @@ import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import ru.malygin.anytoany.data.dateTime.getTodayDate
 import ru.malygin.anytoany.data.routing.HomeScreen
 import ru.malygin.anytoany.data.routing.LoginScreen
 import ru.malygin.anytoany.data.routing.getScreenRoute
@@ -50,7 +51,14 @@ fun App() {
                                 colors = TopAppBarDefaults.topAppBarColors(
                                     containerColor = MaterialTheme.colorScheme.primaryContainer
                                 ),
-                                title = { Text(navigator.lastItem.getScreenRoute().titleRu) },
+                                title =
+                                    {
+                                        val ll = if (navigator.lastItem is HomeScreen) " - ${getTodayDate()}" else ""
+                                        Text(
+                                            text = navigator.lastItem.getScreenRoute().titleRu
+                                                .plus(ll)
+                                        )
+                                    },
                                 navigationIcon = {
                                     if (navigator.lastItem !is HomeScreen) {
 
